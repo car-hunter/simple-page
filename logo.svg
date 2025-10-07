@@ -1,0 +1,24 @@
+<svg width="120" height="28" viewBox="0 0 120 28" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .wordmark {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: -0.025em;
+        fill: #0f172a;
+      }
+      .hunt-special {
+        fill: #0891b2;
+      }
+    </style>
+  </defs>
+  
+  <!-- Pure minimalist wordmark approach -->
+  <text x="0" y="18" class="wordmark">
+    Car<tspan class="hunt-special">Hunt</tspan>er
+  </text>
+  
+  <!-- Single distinctive element - minimal search dot -->
+  <circle cx="110" cy="14" r="1.5" fill="#0891b2" opacity="0.6"/>
+</svg>
