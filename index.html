@@ -13,16 +13,27 @@
     <header class="header">
         <div class="container">
             <nav class="nav">
-                <div class="nav-left">
-                    <a href="#" class="nav-link">Serviços</a>
-                    <a href="#" class="nav-link">Sobre</a>
-                </div>
                 <div class="logo-container">
                     <img src="logo.svg" alt="CarHunter - Find, Rate, Buy Your Perfect Car" class="logo">
                 </div>
-                <div class="nav-right">
-                    <a href="#" class="nav-link">Contato</a>
-                    <a href="#" class="nav-link">Suporte</a>
+                
+                <!-- Mobile menu button -->
+                <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+                
+                <!-- Navigation menu -->
+                <div class="nav-menu">
+                    <div class="nav-left">
+                        <!-- <a href="#" class="nav-link">Serviços</a> -->
+                        <!-- <a href="#" class="nav-link">Sobre</a> -->
+                    </div>
+                    <div class="nav-right">
+                        <a href="#contact" class="nav-link">Contato</a>
+                        <!-- <a href="#" class="nav-link">Suporte</a> -->
+                    </div>
                 </div>
             </nav>
         </div>
@@ -43,14 +54,19 @@
                             <i class="fas fa-user"></i>
                             Nome completo
                         </label>
-                        <input 
-                            type="text" 
-                            id="customerName" 
-                            name="customerName" 
-                            class="form-input" 
-                            required
-                            placeholder="Digite seu nome completo"
-                        >
+                        <div class="input-container">
+                            <input 
+                                type="text" 
+                                id="customerName" 
+                                name="customerName" 
+                                class="form-input" 
+                                required
+                                placeholder="Digite seu nome completo"
+                            >
+                            <button type="button" class="clear-btn" data-target="customerName" title="Limpar campo">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
                         <span class="error-message" id="nameError"></span>
                     </div>
 
@@ -59,14 +75,19 @@
                             <i class="fas fa-envelope"></i>
                             Email
                         </label>
-                        <input 
-                            type="email" 
-                            id="customerEmail" 
-                            name="customerEmail" 
-                            class="form-input" 
-                            required
-                            placeholder="Digite seu email"
-                        >
+                        <div class="input-container">
+                            <input 
+                                type="email" 
+                                id="customerEmail" 
+                                name="customerEmail" 
+                                class="form-input" 
+                                required
+                                placeholder="Digite seu email"
+                            >
+                            <button type="button" class="clear-btn" data-target="customerEmail" title="Limpar campo">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
                         <span class="error-message" id="emailError"></span>
                     </div>
 
@@ -75,18 +96,23 @@
                             <i class="fas fa-mobile-alt"></i>
                             Celular
                         </label>
-                        <input 
-                            type="tel" 
-                            id="customerPhone" 
-                            name="customerPhone" 
-                            class="form-input" 
-                            required
-                            placeholder="(11) 99999-9999"
-                            autocomplete="tel"
-                            inputmode="tel"
-                            pattern="\(\d{2}\) \d{5}-\d{4}"
-                            title="Formato: (11) 99999-9999"
-                        >
+                        <div class="input-container">
+                            <input 
+                                type="tel" 
+                                id="customerPhone" 
+                                name="customerPhone" 
+                                class="form-input" 
+                                required
+                                placeholder="(11) 99999-9999"
+                                autocomplete="tel"
+                                inputmode="tel"
+                                pattern="\(\d{2}\) \d{5}-\d{4}"
+                                title="Formato: (11) 99999-9999"
+                            >
+                            <button type="button" class="clear-btn" data-target="customerPhone" title="Limpar campo">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
                         <span class="error-message" id="phoneError"></span>
                     </div>
 
@@ -95,14 +121,19 @@
                             <i class="fas fa-comment-dots"></i>
                             Nos diga sobre suas necessidades
                         </label>
-                        <textarea 
-                            id="customerMessage" 
-                            name="customerMessage" 
-                            class="form-textarea" 
-                            maxlength="500" 
-                            required
-                            placeholder="Descreva suas necessidades automotivas, detalhes do veículo, ou qualquer outra necessidade específica..."
-                        ></textarea>
+                        <div class="textarea-container">
+                            <textarea 
+                                id="customerMessage" 
+                                name="customerMessage" 
+                                class="form-textarea" 
+                                maxlength="500" 
+                                required
+                                placeholder="Descreva suas necessidades automotivas, detalhes do veículo, ou qualquer outra necessidade específica..."
+                            ></textarea>
+                            <button type="button" class="clear-btn textarea-clear" data-target="customerMessage" title="Limpar campo">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
                         <div class="character-counter">
                             <span id="charCount">0</span>/500 caracteres
                         </div>
@@ -132,19 +163,19 @@
                     <ul>
                         <li>Busca e descoberta de veículos</li>
                         <li>Avaliação e avaliações de veículos</li>
-                        <li>Comparação de preços</li>
+                        <!-- <li>Comparação de preços</li> -->
                         <li>Consultoria de compra</li>
-                        <li>Análise de mercado</li>
+                        <!-- <li>Análise de mercado</li> -->
                     </ul>
                 </div>
                 
-                <div class="footer-section">
+                <div class="footer-section" id="contact">
                     <h4>Informações de contato</h4>
                     <div class="contact-info">
-                        <p><i class="fas fa-map-marker-alt"></i> Rua das Flores, 123, Bairro das Flores, Cidade das Flores, SP</p>
+                        <!-- <p><i class="fas fa-map-marker-alt"></i> Rua das Flores, 123, Bairro das Flores, Cidade das Flores, SP</p> -->
                         <p><i class="fas fa-phone"></i> (11) 99999-9999</p>
                         <p><i class="fas fa-envelope"></i> info@carhunter.com</p>
-                        <p><i class="fas fa-clock"></i> Seg-Sex: 8AM-6PM, Sáb: 9AM-4PM</p>
+                        <!-- <p><i class="fas fa-clock"></i> Seg-Sex: 8AM-6PM, Sáb: 9AM-4PM</p> -->
                     </div>
                 </div>
                 
@@ -164,6 +195,49 @@
             </div>
         </div>
     </footer>
+
+    <!-- Tooltip for textarea -->
+    <div id="textareaTooltip" class="textarea-tooltip">
+        <div class="tooltip-content">
+            <div class="tooltip-header">
+                <i class="fas fa-info-circle"></i>
+                <span>Dica útil</span>
+                <button class="tooltip-close" aria-label="Fechar dica">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="tooltip-body">
+                <p><strong>O que você pode nos informar para melhor atendermos suas necessidades?</strong></p>
+                <ul>
+                    <li>Caso já tenha encontrado o veículo mas precisa de uma avaliação técnica:</li>
+                    <ul>
+                        <li>Marca</li>
+                        <li>Modelo</li>
+                    </ul>
+                    <li>Caso já tenha um modelo em mente:</li>
+                    <ul>
+                        <li>Marca</li>
+                        <li>Modelo</li>
+                        <li>Ano</li>
+                        <li>Cor</li>
+                        <li>Preço</li>
+                        <li>Localização</li>
+                        <li>Condições</li>
+                        <li>Outras informações</li>
+                    </ul>
+                    <li>Caso não tenha um modelo em mente:</li>
+                    <ul>
+                        <li>Tipo de veículo desejado (carro, moto, caminhão)</li>
+                        <li>Faixa de preço pretendida</li>
+                        <li>Ano de fabricação preferido</li>
+                        <li>Características específicas importantes</li>
+                        <li>Finalidade de uso (trabalho, família, lazer)</li>
+                    </ul>
+                </ul>
+                <p class="tooltip-note">Quanto mais detalhes, melhor poderemos te ajudar!</p>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

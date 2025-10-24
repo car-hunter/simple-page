@@ -8,6 +8,80 @@ document.addEventListener('DOMContentLoaded', function() {
     const charCountDisplay = document.getElementById('charCount');
     const characterCounter = document.querySelector('.character-counter');
     
+    // Tooltip elements
+    const tooltip = document.getElementById('textareaTooltip');
+    const tooltipClose = document.querySelector('.tooltip-close');
+    
+    // Mobile menu functionality
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navMenu = document.querySelector('.nav-menu');
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    // Toggle mobile menu
+    mobileMenuBtn.addEventListener('click', function() {
+        this.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        
+        // Prevent body scroll when menu is open
+        if (navMenu.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // Close mobile menu when clicking on nav links and handle smooth scrolling
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            
+            // Handle anchor links with smooth scrolling
+            if (href.startsWith('#') && href !== '#') {
+                e.preventDefault();
+                const targetElement = document.querySelector(href);
+                
+                if (targetElement) {
+                    // Close mobile menu first
+                    mobileMenuBtn.classList.remove('active');
+                    navMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                    
+                    // Smooth scroll to target with offset for fixed header
+                    const headerHeight = document.querySelector('.header').offsetHeight;
+                    const targetPosition = targetElement.offsetTop - headerHeight - 20; // 20px extra padding
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            } else {
+                // For regular links, just close mobile menu
+                mobileMenuBtn.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+            mobileMenuBtn.classList.remove('active');
+            navMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // Close mobile menu on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            mobileMenuBtn.classList.remove('active');
+            navMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+    
     // Character counter for textarea
     messageInput.addEventListener('input', function() {
         const currentLength = this.value.length;
@@ -25,6 +99,96 @@ document.addEventListener('DOMContentLoaded', function() {
             characterCounter.classList.add('danger');
         }
     });
+    
+    // Tooltip functionality for textarea
+    let tooltipManuallyDismissed = false;
+    
+    function showTooltip() {
+        if (tooltip && !tooltipManuallyDismissed) {
+            tooltip.classList.add('show');
+        }
+    }
+    
+    function hideTooltip() {
+        if (tooltip) {
+            tooltip.classList.remove('show');
+        }
+    }
+    
+    // Show tooltip when user focuses on textarea
+    messageInput.addEventListener('focus', function() {
+        // Show tooltip after a short delay when focusing
+        setTimeout(() => {
+            if (document.activeElement === messageInput) {
+                showTooltip();
+            }
+        }, 300);
+    });
+    
+    // Show tooltip when user clicks on textarea (even if already focused)
+    messageInput.addEventListener('click', function() {
+        if (!tooltipManuallyDismissed) {
+            showTooltip();
+        }
+    });
+    
+    // Also show tooltip when user starts typing (for first few characters)
+    messageInput.addEventListener('input', function() {
+        if (this.value.length > 0 && this.value.length <= 5 && !tooltipManuallyDismissed) {
+            showTooltip();
+        }
+    });
+    
+    // Hide tooltip when textarea loses focus (but allow it to show again)
+    messageInput.addEventListener('blur', function() {
+        // Hide tooltip after a short delay to allow clicking on tooltip
+        setTimeout(() => {
+            if (document.activeElement !== messageInput && !tooltip.matches(':hover')) {
+                hideTooltip();
+            }
+        }, 200);
+    });
+    
+    // Hide tooltip when clicking close button
+    if (tooltipClose) {
+        tooltipClose.addEventListener('click', function() {
+            hideTooltip();
+            tooltipManuallyDismissed = true; // Prevent showing again until page reload
+        });
+    }
+    
+    // Hide tooltip when clicking outside (but don't prevent future shows)
+    document.addEventListener('click', function(e) {
+        if (tooltip && tooltip.classList.contains('show')) {
+            if (!tooltip.contains(e.target) && e.target !== messageInput) {
+                hideTooltip();
+                // Don't set tooltipManuallyDismissed = true here, so it can show again
+            }
+        }
+    });
+    
+    // Hide tooltip on escape key (but don't prevent future shows)
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && tooltip && tooltip.classList.contains('show')) {
+            hideTooltip();
+            // Don't set tooltipManuallyDismissed = true here, so it can show again
+        }
+    });
+    
+    // Keep tooltip visible when hovering over it
+    if (tooltip) {
+        tooltip.addEventListener('mouseenter', function() {
+            // Cancel any pending hide operations
+            clearTimeout(window.tooltipHideTimeout);
+        });
+        
+        tooltip.addEventListener('mouseleave', function() {
+            // Hide tooltip when mouse leaves and textarea is not focused
+            if (document.activeElement !== messageInput) {
+                hideTooltip();
+            }
+        });
+    }
     
     // Form validation functions
     function validateName(name) {
@@ -329,13 +493,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            // Add smooth scroll behavior if needed for actual navigation
-        });
-    });
+    // Additional smooth scrolling support for older browsers
+    if (!('scrollBehavior' in document.documentElement.style)) {
+        // Polyfill for smooth scrolling in older browsers
+        function smoothScrollTo(targetPosition, duration = 800) {
+            const startPosition = window.pageYOffset;
+            const distance = targetPosition - startPosition;
+            let startTime = null;
+            
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+                const run = ease(timeElapsed, startPosition, distance, duration);
+                window.scrollTo(0, run);
+                if (timeElapsed < duration) requestAnimationFrame(animation);
+            }
+            
+            function ease(t, b, c, d) {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t + b;
+                t--;
+                return -c / 2 * (t * (t - 2) - 1) + b;
+            }
+            
+            requestAnimationFrame(animation);
+        }
+        
+        // Override the smooth scroll behavior for older browsers
+        window.smoothScrollTo = smoothScrollTo;
+    }
     
     // Add loading animation to submit button on hover
     const submitBtn = document.querySelector('.submit-btn');
@@ -345,6 +531,82 @@ document.addEventListener('DOMContentLoaded', function() {
     
     submitBtn.addEventListener('mouseleave', function() {
         this.style.transform = 'translateY(0) scale(1)';
+    });
+    
+    // Clear button functionality
+    const clearButtons = document.querySelectorAll('.clear-btn');
+    
+    clearButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const targetInput = document.getElementById(targetId);
+            
+            if (targetInput) {
+                // Clear the input value
+                targetInput.value = '';
+                
+                // Focus back on the input
+                targetInput.focus();
+                
+                // Clear any error messages
+                const errorElement = document.getElementById(targetId.replace('customer', '').toLowerCase() + 'Error');
+                if (errorElement) {
+                    clearError(targetInput, errorElement);
+                }
+                
+                // Reset character counter for message field
+                if (targetId === 'customerMessage') {
+                    charCountDisplay.textContent = '0';
+                    characterCounter.classList.remove('warning', 'danger');
+                }
+                
+                // Add a subtle animation
+                this.style.transform = targetId === 'customerMessage' ? 'scale(0.8)' : 'translateY(-50%) scale(0.8)';
+                setTimeout(() => {
+                    this.style.transform = targetId === 'customerMessage' ? 'scale(1)' : 'translateY(-50%) scale(1)';
+                }, 150);
+            }
+        });
+    });
+    
+    // Show/hide clear buttons based on input content
+    function toggleClearButton(input) {
+        const container = input.closest('.input-container, .textarea-container');
+        const clearBtn = container.querySelector('.clear-btn');
+        
+        if (input.value.length > 0) {
+            clearBtn.style.opacity = '1';
+            clearBtn.style.visibility = 'visible';
+        } else {
+            clearBtn.style.opacity = '0';
+            clearBtn.style.visibility = 'hidden';
+        }
+    }
+    
+    // Add event listeners to show/hide clear buttons
+    [nameInput, emailInput, phoneInput, messageInput].forEach(input => {
+        input.addEventListener('input', function() {
+            toggleClearButton(this);
+        });
+        
+        input.addEventListener('focus', function() {
+            if (this.value.length > 0) {
+                toggleClearButton(this);
+            }
+        });
+        
+        input.addEventListener('blur', function() {
+            const container = this.closest('.input-container, .textarea-container');
+            const clearBtn = container.querySelector('.clear-btn');
+            
+            // Hide clear button after a short delay to allow clicking
+            setTimeout(() => {
+                if (!container.matches(':hover')) {
+                    clearBtn.style.opacity = '0';
+                    clearBtn.style.visibility = 'hidden';
+                }
+            }, 200);
+        });
     });
 });
 
